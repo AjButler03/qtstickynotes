@@ -7,8 +7,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 SOURCES += \
     main.cpp \
-    note.cpp
+    note.cpp \
+    noteheader.cpp
 
 HEADERS += \
     doubleclicklabel.h \
-    note.h
+    note.h \
+    noteheader.h

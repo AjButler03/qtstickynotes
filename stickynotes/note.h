@@ -8,6 +8,7 @@
 
 class DoubleClickLabel;
 class QLineEdit;
+class NoteHeader;
 
 class Note : public QMainWindow
 {
@@ -20,11 +21,7 @@ public:
 
 private:
     const QString baseTitle = "Untitled Note";
-    DoubleClickLabel *titleLabel;
-    QLineEdit *titleEdit;
-
-    void beginTitleEdit();
-    void finishTitleEdit();
+    NoteHeader *header;
 
 signals:
 
