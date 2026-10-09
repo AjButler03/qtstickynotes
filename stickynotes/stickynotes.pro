@@ -10,4 +10,5 @@ SOURCES += \
     note.cpp
 
 HEADERS += \
+    doubleclicklabel.h \
     note.h
