@@ -1,63 +1,49 @@
 #include <QApplication>
 #include <QMainWindow>
-#include <QTextEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QWidget>
+
+#include "note.h"
 
 int main(int argc, char *argv[])
 {
-    // Initialize the application with passed arguements
     QApplication app(argc, argv);
 
-    // Initialize a new window
-    // Note specified title and size
+    // Initialize the main window
     QMainWindow window;
-    window.setWindowTitle("My Sticky Note");
-    window.resize(400, 300);
-    window.setMinimumSize(200, 100);
+    window.setWindowTitle("Sticky Notes");
+    window.resize(400, 150);
 
-    // Create a textedit object
-    QTextEdit textEdit;
+    // Create a button for creating new Note windows
+    QPushButton newNoteButton("New Note");
 
-    // Creating a button to clear written text
-    QPushButton clearButton("Clear");
-    QPushButton saveButton("Save (N/A)");
-
-    // Create layout, add widgets to it
-    QVBoxLayout mainLayout;
-    QHBoxLayout toolBarLayout;
-
-
-    // Create Widget to act as container for main, toolbar layouts
+    // Create central layout, and a widget to contain it
     QWidget centralWidget;
+    QVBoxLayout layout;
 
-    // add buttons to toolbar layout
-    toolBarLayout.addWidget(&clearButton);
-    toolBarLayout.addWidget(&saveButton);
-    toolBarLayout.addStretch();
+    // Adds button to layout
+    layout.addWidget(&newNoteButton);
 
-    // add textedit, toolbar to main layout
-    // and then that layout to main widget
-    mainLayout.addWidget(&textEdit);
-    mainLayout.addLayout(&toolBarLayout);
-    centralWidget.setLayout(&mainLayout);
-
-    // Set the main widget as the window's central widget
+    // Sets central widget to contain layout
+    centralWidget.setLayout(&layout);
+    // sets central widget as the central widget
     window.setCentralWidget(&centralWidget);
 
-    // Signal & Slot;
-    // When button is clicked, clear the text
+    // Connects the button press to create a new Note
+    // calling Note Constructor
     QObject::connect(
-        &clearButton,
+        &newNoteButton,
         &QPushButton::clicked,
-        &textEdit,
-        &QTextEdit::clear
+        []()
+        {
+            Note *note = new Note;
+            note->setAttribute(Qt::WA_DeleteOnClose);
+            note->show();
+        }
         );
-
 
     window.show();
 
-    // run application; this is the event loop
     return app.exec();
 }
