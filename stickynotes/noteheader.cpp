@@ -7,8 +7,14 @@
 #include <QMouseEvent>
 #include <QWidget>
 #include <QEvent>
-#include<QDebug>
+#include <QTimer>
+#include <QDebug>
 
+// This is a separate class to handle the header of a sticky note.
+// I originally wanted to remove the existing OS header, making
+// this fully custom. I Wasn't able to get the window dragging
+// to work, so we're just goint to use the existing OS header
+// and work around that.
 NoteHeader::NoteHeader(const QString &title, QWidget *parent)
     : QWidget(parent)
 {
@@ -19,11 +25,7 @@ NoteHeader::NoteHeader(const QString &title, QWidget *parent)
     titleEdit->hide();
 
     // Create window control buttons
-    minimizeButton = new QPushButton("-", this);
-    closeButton = new QPushButton("x", this);
-
-    minimizeButton->setFixedSize(25, 22);
-    closeButton->setFixedSize(25, 22);
+    newNoteButton = new QPushButton("+", this);
 
     // Create layout
     QHBoxLayout *layout = new QHBoxLayout(this);
@@ -35,36 +37,9 @@ NoteHeader::NoteHeader(const QString &title, QWidget *parent)
     layout->addWidget(titleLabel);
     layout->addWidget(titleEdit);
     layout->addStretch();
-    layout->addWidget(minimizeButton);
-    layout->addWidget(closeButton);
+    layout->addWidget(newNoteButton);
 
-    // Style the header
-    // This is a placeholder; in theory, this should be done
-    // later in QML.
-    setStyleSheet(
-        "NoteHeader {"
-        "    background-color: #E6DFA5;"
-        "}"
-        "QPushButton {"
-        "    border: none;"
-        "    background-color: transparent;"
-        "}"
-        "QPushButton:hover {"
-        "    background-color: #D5CD91;"
-        "}"
-        "QPushButton:hover {"
-        "    border: none;"
-        "}"
-        );
-
-    // Connect window controls
-    connect(minimizeButton, &QPushButton::clicked,
-            this, &NoteHeader::minimizeRequested);
-
-    connect(closeButton, &QPushButton::clicked,
-            this, &NoteHeader::closeRequested);
-
-    // Begin editing when the title is double-clicked
+    // Event filter for the title label
     titleLabel->installEventFilter(this);
 
     // Finish editing when Enter is pressed or editing ends
@@ -79,6 +54,7 @@ QString NoteHeader::getTitle() const
 
 void NoteHeader::setTitle(const QString &title)
 {
+    window()->setWindowTitle("Note: " + title);
     titleLabel->setText(title);
     titleEdit->setText(title);
 }
@@ -99,8 +75,9 @@ void NoteHeader::finishTitleEdit()
     QString title = titleEdit->text().trimmed();
 
     if (title.isEmpty())
-        title = "Untitled Note";
+        title = "Untitled";
 
+    window()->setWindowTitle("Note: " + title);
     titleLabel->setText(title);
     titleEdit->setText(title);
 
@@ -110,56 +87,16 @@ void NoteHeader::finishTitleEdit()
     emit titleChanged(title);
 }
 
+// Event filter to detect double click on title
 bool NoteHeader::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == titleLabel &&
-        event->type() == QEvent::MouseButtonDblClick)
-    {
-        beginTitleEdit();
-        return true;
+    if (watched == titleLabel) {
+        // Double click on title -> edit title
+        if (event->type() == QEvent::MouseButtonDblClick) {
+            beginTitleEdit();
+            return true;
+        }
     }
 
     return QWidget::eventFilter(watched, event);
-}
-
-void NoteHeader::mousePressEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton)
-    {
-        dragging = true;
-
-        // Note: dragOffset is to store the location of the mouse
-        // Cursor within the window, not the change in position
-        // of the mouse on the screen.
-        dragOffset =
-            event->globalPosition().toPoint()
-            - window()->frameGeometry().topLeft();
-        qDebug() << "MousePress";
-        event->accept();
-        return;
-    }
-
-    QWidget::mousePressEvent(event);
-}
-
-void NoteHeader::mouseMoveEvent(QMouseEvent *event)
-{
-    if (dragging && (event->buttons() & Qt::LeftButton)) {
-        // Move the top-level window to follow the cursor.
-        qDebug() << "Offset Prev: " << dragOffset;
-        window()->move(
-            event->globalPosition().toPoint() - dragOffset
-            );
-
-        event->accept();
-    }
-}
-
-void NoteHeader::mouseReleaseEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton) {
-        qDebug() << "MouseRelease";
-        dragging = false;
-        event->accept();
-    }
 }

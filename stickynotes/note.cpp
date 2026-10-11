@@ -6,12 +6,13 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QTimer>
 
 Note::Note(QWidget *parent)
     : QMainWindow{parent}
 {
     // Removing the native window border
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    // setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
     setWindowTitle(baseTitle);
     resize(400, 200);

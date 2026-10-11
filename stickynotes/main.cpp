@@ -11,29 +11,29 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     // Initialize the main window
-    QMainWindow window;
-    window.setWindowTitle("Sticky Notes");
-    window.resize(400, 150);
+    QMainWindow *window = new QMainWindow;
+    window->setWindowTitle("Sticky Notes");
+    window->resize(400, 150);
 
     // Create a button for creating new Note windows
-    QPushButton newNoteButton("New Note");
+    QPushButton *newNoteButton = new QPushButton("New Note");
 
     // Create central layout, and a widget to contain it
-    QWidget centralWidget;
-    QVBoxLayout layout;
+    QWidget *centralWidget = new QWidget();
+    QVBoxLayout *layout = new QVBoxLayout();
 
     // Adds button to layout
-    layout.addWidget(&newNoteButton);
+    layout->addWidget(newNoteButton);
 
     // Sets central widget to contain layout
-    centralWidget.setLayout(&layout);
+    centralWidget->setLayout(layout);
     // sets central widget as the central widget
-    window.setCentralWidget(&centralWidget);
+    window->setCentralWidget(centralWidget);
 
     // Connects the button press to create a new Note
     // calling Note Constructor
     QObject::connect(
-        &newNoteButton,
+        newNoteButton,
         &QPushButton::clicked,
         []()
         {
@@ -43,7 +43,9 @@ int main(int argc, char *argv[])
         }
         );
 
-    window.show();
+    // Delete window when closed
+    window->setAttribute(Qt::WA_DeleteOnClose);
+    window->show();
 
     return app.exec();
 }

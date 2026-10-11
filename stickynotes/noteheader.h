@@ -25,20 +25,25 @@ signals:
     void closeRequested();
 
 protected:
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
+    // void mousePressEvent(QMouseEvent *event) override;
+    // void mouseMoveEvent(QMouseEvent *event) override;
+    // void mouseReleaseEvent(QMouseEvent *event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     QLabel *titleLabel;
     QLineEdit *titleEdit;
 
-    QPushButton *minimizeButton;
-    QPushButton *closeButton;
+    QPushButton *newNoteButton;
 
-    QPoint dragOffset;
-    bool dragging = false;
+
+    // Some leftovers from trying to do a fully custom header.
+
+    // QPushButton *minimizeButton;
+    // QPushButton *closeButton;
+
+    // QPoint dragOffset;
+    // bool dragging = false;
 
     void beginTitleEdit();
     void finishTitleEdit();
