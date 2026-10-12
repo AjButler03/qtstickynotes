@@ -29,7 +29,7 @@ Note::Note(QWidget *parent)
     header = new NoteHeader(baseTitle, this);
 
     // Create the primary textedit portion of the note
-    QTextEdit *textEdit = new QTextEdit;
+    textEdit = new QTextEdit;
 
     // Add header, textedit, and toolbar to main layout
     mainLayout->addWidget(header);
@@ -54,26 +54,39 @@ Note::Note(QWidget *parent)
         &QTextEdit::clear
         );
 
-    // Connecting header signals to the window
-    connect(header, &NoteHeader::closeRequested,
-            this, &QWidget::close);
-
-    connect(header, &NoteHeader::minimizeRequested,
-            this, &QWidget::showMinimized);
-
-    connect(header, &NoteHeader::titleChanged,
-            this, &Note::setTitle);
+    // Connecting header request for new window to creating a new Note window
+    connect(header, &NoteHeader::newNoteRequested,
+            this,
+            []()
+            {
+                Note *note = new Note;
+                note->setAttribute(Qt::WA_DeleteOnClose);
+                note->show();
+            }
+            );
 
     // Set mainLayout for centralwidget, then put centralWidget in place
     centralWidget->setLayout(mainLayout);
     setCentralWidget(centralWidget);
+
 }
 
 // Sets the window title to the given string.
-void Note::setTitle(QString s){
+void Note::setTitle(const QString &s){
     header->setTitle(s);
 }
 
-QString Note::getTitle(){
+// Manually sets the body text of the sticky note.
+void Note::setText(const QString &text){
+    textEdit->setPlainText(text);
+}
+
+// Retreives the sticky note's title.
+QString Note::getTitle() const {
     return header->getTitle();
+}
+
+// Retreives the sticky note's body text.
+QString Note::getText() const{
+    return textEdit->toPlainText();
 }

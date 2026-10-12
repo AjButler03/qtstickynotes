@@ -21,8 +21,9 @@ public:
 
 signals:
     void titleChanged(const QString &title);
-    void minimizeRequested();
-    void closeRequested();
+    void newNoteRequested();
+    // Ubuntu window manager ruining my dreams :(
+    void alwaysOnTopRequested();
 
 protected:
     // void mousePressEvent(QMouseEvent *event) override;

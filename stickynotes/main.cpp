@@ -5,10 +5,14 @@
 #include <QWidget>
 
 #include "note.h"
+#include "notemanager.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    // Create the NoteManager for handling file operations
+    NoteManager noteManager = NoteManager();
 
     // Initialize the main window
     QMainWindow *window = new QMainWindow;

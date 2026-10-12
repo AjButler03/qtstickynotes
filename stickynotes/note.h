@@ -1,9 +1,8 @@
 #ifndef NOTE_H
 #define NOTE_H
 
-#include "doubleclicklabel.h"
-
 #include <QMainWindow>
+#include <QTextEdit>
 
 
 class DoubleClickLabel;
@@ -16,12 +15,18 @@ class Note : public QMainWindow
 public:
     explicit Note(QWidget *parent = nullptr);
 
-    void setTitle(QString s);
-    QString getTitle();
+
+
+    void setTitle(const QString &s);
+    void setText(const QString &text);
+
+    QString getTitle() const;
+    QString getText() const;
 
 private:
     const QString baseTitle = "Untitled Note";
     NoteHeader *header;
+    QTextEdit *textEdit;
 
 signals:
 

@@ -7,13 +7,12 @@
 #include <QMouseEvent>
 #include <QWidget>
 #include <QEvent>
-#include <QTimer>
 #include <QDebug>
 
 // This is a separate class to handle the header of a sticky note.
 // I originally wanted to remove the existing OS header, making
 // this fully custom. I Wasn't able to get the window dragging
-// to work, so we're just goint to use the existing OS header
+// to work, so we're just going to use the existing OS header
 // and work around that.
 NoteHeader::NoteHeader(const QString &title, QWidget *parent)
     : QWidget(parent)
@@ -26,10 +25,12 @@ NoteHeader::NoteHeader(const QString &title, QWidget *parent)
 
     // Create window control buttons
     newNoteButton = new QPushButton("+", this);
+    newNoteButton->setFixedSize(25, 22);
 
     // Create layout
     QHBoxLayout *layout = new QHBoxLayout(this);
 
+    // Some basic styling so the header doesn't look weird
     layout->setContentsMargins(5, 2, 5, 2);
     layout->setSpacing(5);
 
@@ -45,6 +46,11 @@ NoteHeader::NoteHeader(const QString &title, QWidget *parent)
     // Finish editing when Enter is pressed or editing ends
     connect(titleEdit, &QLineEdit::editingFinished,
             this, &NoteHeader::finishTitleEdit);
+
+    // Connect the newNote button
+    connect(newNoteButton, &QPushButton::clicked,
+            this, &NoteHeader::newNoteRequested);
+
 }
 
 QString NoteHeader::getTitle() const
