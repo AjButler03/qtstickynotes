@@ -39,9 +39,11 @@ int main(int argc, char *argv[])
     QObject::connect(
         newNoteButton,
         &QPushButton::clicked,
-        []()
+        [&noteManager]()
         {
-            Note *note = new Note;
+            QString id = noteManager.createNote();
+            qDebug() << "NoteId: " << id;
+            Note *note = new Note(&noteManager, id);
             note->setAttribute(Qt::WA_DeleteOnClose);
             note->show();
         }

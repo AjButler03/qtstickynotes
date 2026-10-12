@@ -1,6 +1,8 @@
 #ifndef NOTE_H
 #define NOTE_H
 
+#include "notemanager.h"
+
 #include <QMainWindow>
 #include <QTextEdit>
 
@@ -13,7 +15,7 @@ class Note : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit Note(QWidget *parent = nullptr);
+    explicit Note(NoteManager *manager, const QString &noteid, QWidget *parent = nullptr);
 
 
 
@@ -27,6 +29,8 @@ private:
     const QString baseTitle = "Untitled Note";
     NoteHeader *header;
     QTextEdit *textEdit;
+    NoteManager *noteManager;
+    QString noteId;
 
 signals:
 

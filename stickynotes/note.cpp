@@ -1,5 +1,6 @@
 #include "note.h"
 #include "noteheader.h"
+#include "notemanager.h"
 
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -7,12 +8,14 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QTimer>
+#include <QDebug>
 
-Note::Note(QWidget *parent)
+Note::Note(NoteManager *manager, const QString &noteId, QWidget *parent)
     : QMainWindow{parent}
 {
-    // Removing the native window border
-    // setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    // Initialize given fields
+    noteManager = manager;
+    this->noteId = noteId;
 
     setWindowTitle(baseTitle);
     resize(400, 200);
@@ -57,9 +60,11 @@ Note::Note(QWidget *parent)
     // Connecting header request for new window to creating a new Note window
     connect(header, &NoteHeader::newNoteRequested,
             this,
-            []()
+            [this]()
             {
-                Note *note = new Note;
+                QString id = noteManager->createNote();
+                qDebug() << "NoteId: " << id;
+                Note *note = new Note(noteManager, id);
                 note->setAttribute(Qt::WA_DeleteOnClose);
                 note->show();
             }
