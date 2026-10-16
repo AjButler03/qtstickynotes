@@ -1,10 +1,10 @@
 #ifndef NOTEMANAGER_H
 #define NOTEMANAGER_H
 
+#include "notedata.h"
+
 #include <QHash>
 #include <QString>
-
-#include "notedata.h"
 
 
 // NoteManager is to handle saving / loading notes.
@@ -13,21 +13,27 @@ class NoteManager
 public:
     NoteManager();
 
-    QString createNote();
+    // Loads all saved notes from file(s) into manager's hash
+    // basically only ever runs on app startup
+    bool loadNotes();
 
-    // difference between these?
-    NoteData *getNote(const QString &id);
-    const NoteData *getNote(const QString &id) const;
+    // Creates an ID for new note
+    // DOES NOT automatically save note to hash or file
+    QString assignId();
 
-    bool updateNote(const NoteData &data);
+    // Grabs note from manager's hash
+    // Returns true/false for success, populates information into data
+    bool getNoteInfo(const QString &id, NoteData &data);
+
+    // Save note to manager's hash + file
+    bool saveNote(const NoteData &data);
+
+    // Delete from manager's hash + file
     bool deleteNote(const QString &id);
 
 private:
     // Internal hashmap storage of the notes.
     QHash<QString, NoteData> m_notes;
-
-    void save();
-    void load();
 };
 
 #endif // NOTEMANAGER_H

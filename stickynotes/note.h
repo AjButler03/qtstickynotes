@@ -17,8 +17,6 @@ class Note : public QMainWindow
 public:
     explicit Note(NoteManager *manager, const QString &noteid, QWidget *parent = nullptr);
 
-
-
     void setTitle(const QString &s);
     void setText(const QString &text);
 
@@ -31,6 +29,8 @@ private:
     QTextEdit *textEdit;
     NoteManager *noteManager;
     QString noteId;
+
+    void saveNote();
 
 signals:
 

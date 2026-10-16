@@ -1,5 +1,6 @@
 #include "note.h"
 #include "noteheader.h"
+#include "notedata.h"
 #include "notemanager.h"
 
 #include <QTextEdit>
@@ -62,7 +63,7 @@ Note::Note(NoteManager *manager, const QString &noteId, QWidget *parent)
             this,
             [this]()
             {
-                QString id = noteManager->createNote();
+                QString id = noteManager->assignId();
                 qDebug() << "NoteId: " << id;
                 Note *note = new Note(noteManager, id);
                 note->setAttribute(Qt::WA_DeleteOnClose);
@@ -95,3 +96,15 @@ QString Note::getTitle() const {
 QString Note::getText() const{
     return textEdit->toPlainText();
 }
+
+// Create a NoteData object and pass to noteManager to save note
+void Note::saveNote(){
+    NoteData data = NoteData();
+
+    data.isOpen = true;
+
+    // Populate data fields
+    data.id = noteId;
+    data.title = header->getTitle();
+    data.bodyText = textEdit->toPlainText();
+};
